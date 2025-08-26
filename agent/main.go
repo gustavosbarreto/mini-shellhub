@@ -32,8 +32,8 @@ func main() {
     flag.StringVar(&singleUserPass, "single-pass", os.Getenv("MINIMAL_SINGLE_USER_PASSWORD"), "Enable single-user mode with this password hash")
     flag.Parse()
 
-    if serverURL == "" || deviceID == "" || privKey == "" {
-        log.Fatal("missing required params: --server, --id, --key")
+    if serverURL == "" || deviceID == "" {
+        log.Fatal("missing required params: --server, --id")
     }
 
     deviceName := deviceID

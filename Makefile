@@ -34,19 +34,19 @@ $(KEY_DIR)/agent_hostkey:
 	ssh-keygen -t rsa -b 2048 -m PEM -N '' -f $(KEY_DIR)/agent_hostkey
 
 # Run SSH server (HTTP :8080, SSH :2222)
-run-server: build keys ## Run ssh-server (requires port 8080/2222)
-	@echo "[server] PRIVATE_KEY=$(PWD)/$(KEY_DIR)/server_hostkey"
-	@PRIVATE_KEY=$(PWD)/$(KEY_DIR)/server_hostkey $(BIN_DIR)/ssh-server
+run-server: build ## Run ssh-server (requires port 8080/2222)
+	@echo "[server] using in-memory generated key"
+	@$(BIN_DIR)/ssh-server
 
 # Run Agent (connects to SERVER, uses DEVICE_ID)
-run-agent: build keys ## Run agent (SERVER, DEVICE_ID, [SINGLE_PASS])
-	@echo "[agent] server=$(SERVER) id=$(DEVICE_ID) key=$(PWD)/$(KEY_DIR)/agent_hostkey"
-	$(BIN_DIR)/agent --server $(SERVER) --id $(DEVICE_ID) --key $(PWD)/$(KEY_DIR)/agent_hostkey $(if $(SINGLE_PASS),--single-pass '$(SINGLE_PASS)',)
+run-agent: build ## Run agent (SERVER, DEVICE_ID, [SINGLE_PASS])
+	@echo "[agent] server=$(SERVER) id=$(DEVICE_ID) using in-memory generated key"
+	$(BIN_DIR)/agent --server $(SERVER) --id $(DEVICE_ID) $(if $(SINGLE_PASS),--single-pass '$(SINGLE_PASS)',)
 
 # Convenience: start server then agent (server in background)
-up: build keys ## Start server (bg) then agent
+up: build ## Start server (bg) then agent
 	@echo "[up] starting server in background..."
-	@nohup env PRIVATE_KEY=$(PWD)/$(KEY_DIR)/server_hostkey $(BIN_DIR)/ssh-server >/dev/null 2>&1 & echo $$! > .server.pid
+	@nohup $(BIN_DIR)/ssh-server >/dev/null 2>&1 & echo $$! > .server.pid
 	@sleep 0.5
 	@$(MAKE) --no-print-directory run-agent
 

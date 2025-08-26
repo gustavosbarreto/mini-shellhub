@@ -1,6 +1,8 @@
 package server
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
 	"net"
 	"os/exec"
 	"sync"
@@ -89,7 +91,7 @@ const (
 
 // Config stores configuration needs for the SSH server.
 type Config struct {
-	// PrivateKey is the path for the SSH server private key.
+	// PrivateKey is the path for the SSH server private key (optional, will generate in-memory if empty).
 	PrivateKey string
 	// KeepAliveInterval stores the time between each SSH keep alive request.
 	KeepAliveInterval uint32
@@ -144,9 +146,24 @@ func NewServer(api client.Client, mode modes.Mode, cfg *Config) *Server {
 		},
 	}
 
-	err := server.sshd.SetOption(gliderssh.HostKeyFile(cfg.PrivateKey))
-	if err != nil {
-		log.Warn(err)
+	if cfg.PrivateKey != "" {
+		err := server.sshd.SetOption(gliderssh.HostKeyFile(cfg.PrivateKey))
+		if err != nil {
+			log.Warn(err)
+		}
+	} else {
+		// Generate in-memory RSA key
+		privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+		if err != nil {
+			log.WithError(err).Fatal("failed to generate private key")
+		}
+
+		signer, err := gossh.NewSignerFromKey(privateKey)
+		if err != nil {
+			log.WithError(err).Fatal("failed to create signer from private key")
+		}
+
+		server.sshd.AddHostKey(signer)
 	}
 
 	return server

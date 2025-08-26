@@ -1,10 +1,11 @@
 package server
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
 	_ "embed"
 	"fmt"
 	"net"
-	"os"
 	"time"
 
 	gliderssh "github.com/gliderlabs/ssh"
@@ -15,6 +16,7 @@ import (
 	"github.com/shellhub-io/shellhub/ssh/server/channels"
 	"github.com/shellhub-io/shellhub/ssh/session"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh"
 )
 
 type Options struct {
@@ -112,13 +114,18 @@ func NewServer(opts *Options, tunnel *httptunnel.Tunnel) *Server {
 		},
 	}
 
-	if _, err := os.Stat(os.Getenv("PRIVATE_KEY")); os.IsNotExist(err) {
-		log.WithError(err).Fatal("private key not found!")
+	// Generate in-memory RSA key instead of reading from disk
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		log.WithError(err).Fatal("failed to generate private key")
 	}
 
-	if err := server.sshd.SetOption(gliderssh.HostKeyFile(os.Getenv("PRIVATE_KEY"))); err != nil {
-		log.WithError(err).Fatal("host key not found!")
+	signer, err := ssh.NewSignerFromKey(privateKey)
+	if err != nil {
+		log.WithError(err).Fatal("failed to create signer from private key")
 	}
+
+	server.sshd.AddHostKey(signer)
 
 	return server
 }
