@@ -1,4 +1,3 @@
-BIN_DIR := bin
 KEY_DIR := keys
 SERVER  ?= http://127.0.0.1:8080
 DEVICE_ID ?= DEVICE123
@@ -8,16 +7,13 @@ SINGLE_PASS ?=
 
 all: build ## Build ssh-server and agent
 
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
-
 # Build SSH server binary
-ssh: $(BIN_DIR) ## Build only ssh-server
-	cd ssh && go build -o ../$(BIN_DIR)/ssh-server
+ssh: ## Build only ssh-server
+	cd ssh && go build -o ssh-server
 
 # Build Agent binary
-agent: $(BIN_DIR) ## Build only agent
-	cd agent && go build -o ../$(BIN_DIR)/agent
+agent: ## Build only agent
+	cd agent && go build -o agent
 
 # Build both
 build: ssh agent ## Build both binaries
@@ -34,19 +30,19 @@ $(KEY_DIR)/agent_hostkey:
 	ssh-keygen -t rsa -b 2048 -m PEM -N '' -f $(KEY_DIR)/agent_hostkey
 
 # Run SSH server (HTTP :8080, SSH :2222)
-run-server: build ## Run ssh-server (requires port 8080/2222)
+run-server: ssh ## Run ssh-server (requires port 8080/2222)
 	@echo "[server] using in-memory generated key"
-	@$(BIN_DIR)/ssh-server
+	@cd ssh && ./ssh-server
 
 # Run Agent (connects to SERVER, uses DEVICE_ID)
-run-agent: build ## Run agent (SERVER, DEVICE_ID, [SINGLE_PASS])
+run-agent: agent ## Run agent (SERVER, DEVICE_ID, [SINGLE_PASS])
 	@echo "[agent] server=$(SERVER) id=$(DEVICE_ID) using in-memory generated key"
-	$(BIN_DIR)/agent --server $(SERVER) --id $(DEVICE_ID) $(if $(SINGLE_PASS),--single-pass '$(SINGLE_PASS)',)
+	cd agent && ./agent --server $(SERVER) --id $(DEVICE_ID) $(if $(SINGLE_PASS),--single-pass '$(SINGLE_PASS)',)
 
 # Convenience: start server then agent (server in background)
 up: build ## Start server (bg) then agent
 	@echo "[up] starting server in background..."
-	@nohup $(BIN_DIR)/ssh-server >/dev/null 2>&1 & echo $$! > .server.pid
+	@cd ssh && nohup ./ssh-server >/dev/null 2>&1 & echo $$! > ../.server.pid
 	@sleep 0.5
 	@$(MAKE) --no-print-directory run-agent
 
@@ -65,8 +61,9 @@ tidy: ## go mod tidy (ssh, agent)
 	cd agent && go mod tidy
 
 # Clean build artifacts and keys
-clean: ## Remove bin and keys
-	rm -rf $(BIN_DIR) $(KEY_DIR) .server.pid
+clean: ## Remove binaries and keys
+	rm -f ssh/ssh-server agent/agent
+	rm -rf $(KEY_DIR) .server.pid
 
 # Show help
 help: ## Show this help
