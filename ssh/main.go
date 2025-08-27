@@ -5,7 +5,7 @@ import (
     "net/http"
 
     "github.com/shellhub-io/shellhub/pkg/httptunnel"
-    "github.com/shellhub-io/shellhub/ssh/server"
+    "github.com/shellhub-io/mini-shellhub/ssh/server"
     log "github.com/sirupsen/logrus"
 )
 

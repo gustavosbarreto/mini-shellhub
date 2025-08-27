@@ -6,12 +6,13 @@ import (
     "net"
     "net/http"
     "time"
+    "strings"
 
     gliderssh "github.com/gliderlabs/ssh"
     "github.com/shellhub-io/shellhub/pkg/httptunnel"
     "github.com/shellhub-io/shellhub/pkg/models"
-    "github.com/shellhub-io/shellhub/ssh/pkg/host"
-    "github.com/shellhub-io/shellhub/ssh/pkg/target"
+    "github.com/shellhub-io/mini-shellhub/ssh/pkg/host"
+    "github.com/shellhub-io/mini-shellhub/ssh/pkg/target"
     gossh "golang.org/x/crypto/ssh"
 )
 
@@ -126,6 +127,9 @@ func NewSession(ctx gliderssh.Context, tunnel *httptunnel.Tunnel) (*Session, err
 // Dial establishes a raw tunnel connection to the agent using the device ID.
 func (s *Session) Dial(ctx gliderssh.Context) error {
     id := s.Data.Device.UID
+    if !strings.Contains(id, ":") {
+        id = "default:" + id
+    }
     ctx.Lock()
     conn, err := s.tunnel.Dial(ctx, id)
     if err != nil {
@@ -201,6 +205,9 @@ func (s *Session) NewClientChannel(newChannel gossh.NewChannel, seat int) (*Clie
 func (s *Session) NewAgentChannel(name string, seat int) (*AgentChannel, error) {
     if _, ok := s.Agent.Channels[seat]; ok {
         return nil, ErrSeatAlreadySet
+    }
+    if s.Agent == nil || s.Agent.Client == nil {
+        return nil, errors.New("agent client not established")
     }
     channel, requests, err := s.Agent.Client.OpenChannel(name, nil)
     if err != nil {

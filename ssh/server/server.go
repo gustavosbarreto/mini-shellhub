@@ -10,11 +10,11 @@ import (
 
 	gliderssh "github.com/gliderlabs/ssh"
 	"github.com/pires/go-proxyproto"
-	"github.com/shellhub-io/shellhub/pkg/httptunnel"
-	"github.com/shellhub-io/shellhub/ssh/pkg/target"
-	"github.com/shellhub-io/shellhub/ssh/server/auth"
-	"github.com/shellhub-io/shellhub/ssh/server/channels"
-	"github.com/shellhub-io/shellhub/ssh/session"
+    "github.com/shellhub-io/shellhub/pkg/httptunnel"
+    "github.com/shellhub-io/mini-shellhub/ssh/pkg/target"
+    "github.com/shellhub-io/mini-shellhub/ssh/server/auth"
+    "github.com/shellhub-io/mini-shellhub/ssh/server/channels"
+    "github.com/shellhub-io/mini-shellhub/ssh/session"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 )

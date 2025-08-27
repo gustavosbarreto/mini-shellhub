@@ -68,7 +68,7 @@ func NewTunnel(connectionPath, dialerPath string) *Tunnel {
 }
 
 func (t *Tunnel) Router() http.Handler {
-	e := echo.New()
+    e := echo.New()
 
     e.GET(t.ConnectionPath, func(c echo.Context) error {
         conn, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
@@ -95,21 +95,21 @@ func (t *Tunnel) Router() http.Handler {
             tenant, device = "", key
         }
 
-		t.connman.Set(
-			key,
-			wsconnadapter.
-				New(conn).
-				WithID(requestID).
-				WithDevice(tenant, device),
-			t.DialerPath,
-		)
+        t.connman.Set(
+            key,
+            wsconnadapter.
+                New(conn).
+                WithID(requestID).
+                WithDevice(tenant, device),
+            t.DialerPath,
+        )
 
-		return nil
-	})
+        return nil
+    })
 
-	e.GET(t.DialerPath, echo.WrapHandler(revdial.ConnHandler(upgrader)))
+    e.GET(t.DialerPath, echo.WrapHandler(revdial.ConnHandler(upgrader)))
 
-	return e
+    return e
 }
 
 func (t *Tunnel) Dial(ctx context.Context, id string) (net.Conn, error) {

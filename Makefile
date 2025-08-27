@@ -1,7 +1,12 @@
 KEY_DIR := keys
 SERVER  ?= http://127.0.0.1:8080
 DEVICE_ID ?= DEVICE123
+TENANT ?= default
 SINGLE_PASS ?=
+
+# If DEVICE_ID already includes a tenant (tenant:device), keep it.
+# Otherwise, prefix with TENANT (defaults to "default").
+COMPOSED_ID = $(if $(findstring :,$(DEVICE_ID)),$(DEVICE_ID),$(TENANT):$(DEVICE_ID))
 
 .PHONY: all build ssh agent keys run-server run-agent up down clean tidy fmt help
 
@@ -35,9 +40,9 @@ run-server: ssh ## Run ssh-server (requires port 8080/2222)
 	@cd ssh && ./ssh-server
 
 # Run Agent (connects to SERVER, uses DEVICE_ID)
-run-agent: agent ## Run agent (SERVER, DEVICE_ID, [SINGLE_PASS])
-	@echo "[agent] server=$(SERVER) id=$(DEVICE_ID) using in-memory generated key"
-	cd agent && ./agent --server $(SERVER) --id $(DEVICE_ID) $(if $(SINGLE_PASS),--single-pass '$(SINGLE_PASS)',)
+run-agent: agent ## Run agent (SERVER, TENANT:DEVICE_ID, [SINGLE_PASS])
+	@echo "[agent] server=$(SERVER) id=$(COMPOSED_ID) using in-memory generated key"
+	cd agent && ./agent --server $(SERVER) --id $(COMPOSED_ID) $(if $(SINGLE_PASS),--single-pass '$(SINGLE_PASS)',)
 
 # Convenience: start server then agent (server in background)
 up: build ## Start server (bg) then agent

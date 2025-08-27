@@ -1,4 +1,4 @@
-module github.com/shellhub-io/shellhub/ssh
+module github.com/shellhub-io/mini-shellhub/ssh
 
 go 1.23.0
 
@@ -6,7 +6,7 @@ require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/gliderlabs/ssh v0.3.8
 	github.com/pires/go-proxyproto v0.8.0
-	github.com/shellhub-io/shellhub v0.13.4
+	github.com/shellhub-io/shellhub v0.20.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/crypto v0.41.0

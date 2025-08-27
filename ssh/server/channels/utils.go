@@ -7,7 +7,7 @@ import (
 	"github.com/Masterminds/semver"
 	"github.com/shellhub-io/shellhub/pkg/envs"
 	"github.com/shellhub-io/shellhub/pkg/models"
-	"github.com/shellhub-io/shellhub/ssh/session"
+    "github.com/shellhub-io/mini-shellhub/ssh/session"
 	log "github.com/sirupsen/logrus"
 	gossh "golang.org/x/crypto/ssh"
 )

@@ -1,4 +1,4 @@
-module github.com/shellhub-io/shellhub/agent
+module github.com/shellhub-io/mini-shellhub/agent
 
 go 1.23.0
 
@@ -7,7 +7,7 @@ toolchain go1.24.6
 require (
 	github.com/gorilla/websocket v1.5.3
 	github.com/labstack/echo/v4 v4.13.4
-	github.com/shellhub-io/shellhub v0.13.4
+	github.com/shellhub-io/shellhub v0.20.0
 	github.com/sirupsen/logrus v1.9.3
 )
 
