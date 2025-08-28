@@ -10,14 +10,18 @@ require (
 	github.com/docker/docker v27.1.1+incompatible
 	github.com/gliderlabs/ssh v0.3.5
 	github.com/gorilla/websocket v1.5.3
+	github.com/hashicorp/yamux v0.1.2
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/sftp v1.13.5
+	github.com/shellhub-io/mini-shellhub/pkg/yamuxws v0.0.0
 	github.com/shellhub-io/shellhub v0.20.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/crypto v0.40.0
 )
+
+replace github.com/shellhub-io/mini-shellhub/pkg/yamuxws => ../pkg/yamuxws
 
 require (
 	github.com/labstack/gommon v0.4.2 // indirect
@@ -43,6 +47,7 @@ require (
 	github.com/go-resty/resty/v2 v2.7.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/hashicorp/yamux v0.1.2 // indirect
 	github.com/jarcoal/httpmock v1.4.1 // indirect
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/leodido/go-urn v1.2.2 // indirect

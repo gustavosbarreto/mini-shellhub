@@ -10,7 +10,6 @@ import (
 
 	gliderssh "github.com/gliderlabs/ssh"
 	"github.com/pires/go-proxyproto"
-    "github.com/shellhub-io/shellhub/pkg/httptunnel"
     "github.com/shellhub-io/mini-shellhub/ssh/pkg/target"
     "github.com/shellhub-io/mini-shellhub/ssh/server/auth"
     "github.com/shellhub-io/mini-shellhub/ssh/server/channels"
@@ -30,7 +29,7 @@ type Options struct {
 type Server struct {
 	sshd   *gliderssh.Server
 	opts   *Options
-	tunnel *httptunnel.Tunnel
+	tunnel Tunnel
 }
 
 var (
@@ -44,7 +43,7 @@ var (
 	AccessDeniedMessage string
 )
 
-func NewServer(opts *Options, tunnel *httptunnel.Tunnel) *Server {
+func NewServer(opts *Options, tunnel Tunnel) *Server {
 	server := &Server{ // nolint: exhaustruct
 		opts:   opts,
 		tunnel: tunnel,

@@ -8,7 +8,7 @@ SINGLE_PASS ?=
 # Otherwise, prefix with TENANT (defaults to "default").
 COMPOSED_ID = $(if $(findstring :,$(DEVICE_ID)),$(DEVICE_ID),$(TENANT):$(DEVICE_ID))
 
-.PHONY: all build ssh agent keys run-server run-agent up down clean tidy fmt help
+.PHONY: all build ssh agent keys run-server run-agent up down clean tidy fmt test-ssh help
 
 all: build ## Build ssh-server and agent
 
@@ -69,6 +69,10 @@ tidy: ## go mod tidy (ssh, agent)
 clean: ## Remove binaries and keys
 	rm -f ssh/ssh-server agent/agent
 	rm -rf $(KEY_DIR) .server.pid
+
+# Test SSH connection to agent
+test-ssh: ## Test SSH connection to agent (run after 'make up')
+	ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null nobody@DEVICE123@localhost -p 2222 "echo funcionou"
 
 # Show help
 help: ## Show this help

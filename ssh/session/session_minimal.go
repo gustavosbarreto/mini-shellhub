@@ -9,12 +9,16 @@ import (
     "strings"
 
     gliderssh "github.com/gliderlabs/ssh"
-    "github.com/shellhub-io/shellhub/pkg/httptunnel"
     "github.com/shellhub-io/shellhub/pkg/models"
     "github.com/shellhub-io/mini-shellhub/ssh/pkg/host"
     "github.com/shellhub-io/mini-shellhub/ssh/pkg/target"
     gossh "golang.org/x/crypto/ssh"
 )
+
+// Tunnel interface for different tunnel implementations
+type Tunnel interface {
+	Dial(target string) (net.Conn, error)
+}
 
 // Data holds minimal metadata used by channel handlers and logging.
 type Data struct {
@@ -76,14 +80,14 @@ type Session struct {
     Agent  *Agent
     Client *Client
 
-    tunnel *httptunnel.Tunnel
+    tunnel Tunnel
 
     Seats Seats
     Data  // embed to promote fields (SSHID, Device, Target, IPAddress, Type, ...)
 }
 
 // NewSession creates a new minimal session without API or cache.
-func NewSession(ctx gliderssh.Context, tunnel *httptunnel.Tunnel) (*Session, error) {
+func NewSession(ctx gliderssh.Context, tunnel Tunnel) (*Session, error) {
     sshid := ctx.User()
 
     hos, err := host.NewHost(ctx.RemoteAddr().String())
@@ -124,22 +128,17 @@ func NewSession(ctx gliderssh.Context, tunnel *httptunnel.Tunnel) (*Session, err
     return sess, nil
 }
 
-// Dial establishes a raw tunnel connection to the agent using the device ID.
+// Dial establishes a yamux stream connection to the agent using the device ID.
 func (s *Session) Dial(ctx gliderssh.Context) error {
     id := s.Data.Device.UID
     if !strings.Contains(id, ":") {
         id = "default:" + id
     }
     ctx.Lock()
-    conn, err := s.tunnel.Dial(ctx, id)
+    conn, err := s.tunnel.Dial(id)
     if err != nil {
         ctx.Unlock()
         return errors.Join(ErrDial, err)
-    }
-    req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/ssh/%s", s.UID), nil)
-    if err := req.Write(conn); err != nil {
-        ctx.Unlock()
-        return err
     }
     s.Agent.Conn = conn
     ctx.Unlock()

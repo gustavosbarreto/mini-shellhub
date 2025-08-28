@@ -5,12 +5,18 @@ go 1.23.0
 require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/gliderlabs/ssh v0.3.8
+	github.com/gorilla/websocket v1.5.3
+	github.com/hashicorp/yamux v0.1.2
+	github.com/labstack/echo/v4 v4.13.4
 	github.com/pires/go-proxyproto v0.8.0
+	github.com/shellhub-io/mini-shellhub/pkg/yamuxws v0.0.0
 	github.com/shellhub-io/shellhub v0.20.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/crypto v0.41.0
 )
+
+replace github.com/shellhub-io/mini-shellhub/pkg/yamuxws => ../pkg/yamuxws
 
 require (
 	github.com/anmitsu/go-shlex v0.0.0-20200514113438-38f4b401e2be // indirect
@@ -20,6 +26,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
+	github.com/hashicorp/yamux v0.1.2 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/labstack/echo/v4 v4.13.4 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
