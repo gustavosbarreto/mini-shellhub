@@ -12,8 +12,8 @@ import (
 
     "github.com/gorilla/websocket"
     "github.com/labstack/echo/v4"
-    agentsrv "github.com/shellhub-io/shellhub/pkg/agent/server"
-    hostmode "github.com/shellhub-io/shellhub/pkg/agent/server/modes/host"
+    agentsrv "github.com/shellhub-io/mini-shellhub/agent/pkg/agent/server"
+    hostmode "github.com/shellhub-io/mini-shellhub/agent/pkg/agent/server/modes/host"
     apiclient "github.com/shellhub-io/shellhub/pkg/api/client"
     "github.com/shellhub-io/shellhub/pkg/revdial"
     "github.com/shellhub-io/shellhub/pkg/wsconnadapter"
