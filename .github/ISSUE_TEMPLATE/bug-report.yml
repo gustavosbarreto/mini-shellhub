@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a bug or issue
+labels: ["kind/bug", "triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What's happening?
+      description: Describe the issue you're experiencing. Include steps to reproduce, what you expected, and what actually happened.
+      placeholder: |
+        Example:
+        When I try to connect via SSH to my device, I get "connection refused".
+
+        Steps:
+        1. Added device with tenant ID xxx
+        2. Ran ssh root@dev.agent@localhost
+        3. Got connection refused error
+
+        Expected: Should connect successfully
+        Logs: [paste any relevant logs here]
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version & Edition (if known)
+      description: "Example: v0.21.4 Community or Cloud"
+      placeholder: "v0.21.4 Community"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Logs, screenshots, environment details, or anything else that might help
+      placeholder: "OS: Ubuntu 22.04, Docker version 24.0.5, Browser: Chrome 120"
+    validations:
+      required: false

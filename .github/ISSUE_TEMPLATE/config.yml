@@ -1,0 +1,17 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💡 Feature Request / Idea
+    about: Suggest a new feature or improvement
+    url: https://github.com/shellhub-io/shellhub/discussions/categories/ideas
+  - name: ❓ Question / Help
+    about: Get help from the community
+    url: https://github.com/shellhub-io/shellhub/discussions/categories/q-a
+  - name: 📖 Documentation
+    about: Report issues with docs or suggest improvements
+    url: https://docs.shellhub.io
+  - name: 📊 Cloud Status
+    about: Check ShellHub Cloud availability before reporting issues
+    url: https://status.shellhub.io
+  - name: 🔒 Security Vulnerability
+    about: Privately report a security issue (do not create public issue)
+    url: https://github.com/shellhub-io/shellhub/security/advisories/new
